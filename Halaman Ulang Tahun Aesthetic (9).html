@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Birthday Sayangku</title>
+
+  <!-- Tailwind CSS & Google Fonts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Quicksand:wght@500;600;700&family=Shantell+Sans:ital,wght@0,500;0,700;1,600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    body {
+      background-color: #0b1329;
+      font-family: 'Quicksand', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+      padding: 12px;
+      user-select: none;
+    }
+
+    .font-handwriting { font-family: 'Caveat', cursive; }
+    .font-doodle { font-family: 'Shantell Sans', cursive; }
+
+    /* Container Rasio 9:16 Frame HP */
+    .app-card {
+      width: 100%;
+      max-width: 410px;
+      height: calc(100vh - 24px);
+      max-height: 740px;
+      aspect-ratio: 9 / 16;
+      background: #ebf5fc;
+      background-image: 
+        radial-gradient(#b3daf8 1.5px, transparent 1.5px),
+        radial-gradient(#b3daf8 1.5px, #ebf5fc 1.5px);
+      background-size: 28px 28px;
+      background-position: 0 0, 14px 14px;
+      border-radius: 36px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 0 6px rgba(255, 255, 255, 0.25);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Grid background effect for notes */
+    .bg-grid-paper {
+      background-color: #ffffff;
+      background-image: linear-gradient(#e2e8f0 1px, transparent 1px), linear-gradient(90deg, #e2e8f0 1px, transparent 1px);
+      background-size: 14px 14px;
+    }
+
+    /* Polaroids & Cards */
+    .polaroid {
+      background: #ffffff;
+      padding: 10px 10px 22px 10px;
+      border-radius: 12px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
+      transition: transform 0.3s ease;
+      position: relative;
+      border: 1px solid #e2e8f0;
+    }
+
+    /* Washi tape decoration */
+    .washi-tape {
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-2deg);
+      width: 65px;
+      height: 18px;
+      background-color: rgba(255, 255, 255, 0.85);
+      border: 1px dashed #cbd5e1;
+      backdrop-filter: blur(2px);
+      z-index: 10;
+    }
+
+    /* Audio vinyl animation */
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+    .animate-spin-slow {
+      animation: spin 4s linear infinite;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-card" id="mainContainer">
+
+    <!-- Auto-Play Start Trigger Overlay -->
+    <div id="startOverlay" class="absolute inset-0 bg-sky-900/80 backdrop-blur-md z-50 flex flex-col items-center justify-center text-white p-6 text-center transition-opacity duration-500">
+      <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mb-4 animate-bounce">
+        <span class="text-4xl">🎁</span>
+      </div>
+      <h2 class="font-handwriting text-3xl font-bold mb-2">Buka Kejutan Spesial</h2>
+      <p class="text-xs text-sky-100 mb-6 font-semibold">Sentuh di mana saja untuk membuka & memutar lagu otomatis 🎵</p>
+      <span class="px-5 py-2.5 bg-white text-sky-900 font-bold rounded-full text-xs shadow-lg hover:scale-105 transition">
+        Klik / Sentuh Disini ❤️
+      </span>
+    </div>
+
+    <!-- Top Right Music Controller (Auto-playing indicator) -->
+    <div class="absolute top-4 right-4 z-40">
+      <button id="musicToggle" class="bg-white/90 backdrop-blur border border-sky-300 text-sky-900 text-xs font-bold px-3 py-1.5 rounded-full shadow-md hover:bg-sky-50 transition flex items-center gap-1.5">
+        <span id="musicIcon" class="inline-block text-sm"></span>
+        <span id="musicText">Lagu</span>
+      </button>
+    </div>
+
+    <div class="relative w-full h-full flex-1 overflow-hidden">
+      <div id="slidesWrapper" class="w-full h-full flex transition-transform duration-500 ease-out">
+        
+        <!-- SLIDE 1: Cover -->
+        <div class="min-w-full h-full p-5 pt-14 flex flex-col items-center justify-center text-center relative">
+          <!-- Floating Doodle Elements -->
+          <svg class="absolute top-10 left-6 w-12 h-12 opacity-40 text-sky-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+          <svg class="absolute bottom-16 right-6 w-10 h-10 opacity-30 text-sky-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l2.4 7.4h7.6l-6.2 4.5 2.4 7.4-6.2-4.5-6.2 4.5 2.4-7.4-6.2-4.5h7.6z"/></svg>
+
+          <h1 class="font-handwriting text-4xl font-bold text-sky-900 leading-tight mb-2 drop-shadow-sm">
+            Happy Birthday<br><span class="text-sky-600 font-doodle text-3xl">Sayangkuuuuu</span>
+          </h1>
+
+          <div class="polaroid -rotate-2 my-4 w-60">
+            <div class="washi-tape"></div>
+            <!-- Photo Illustration SVG -->
+            <div class="w-full h-40 bg-sky-100 rounded-lg flex flex-col items-center justify-center p-3 text-sky-700">
+              <svg class="w-16 h-16 mb-2 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.684a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+              <span class="font-doodle text-xs font-bold">Special Day ✨</span>
+            </div>
+            <p class="font-handwriting text-xl text-slate-700 mt-2 font-bold">Its your special day! ♥</p>
+          </div>
+
+          <p class="text-[11px] text-sky-800 font-semibold bg-white/80 px-3 py-1 rounded-full border border-sky-200 mt-2 shadow-sm">
+            👉 Geser ke kanan untuk lanjut &gt;
+          </p>
+        </div>
+
+        <!-- SLIDE 2: Calendar (Januari 4) -->
+        <div class="min-w-full h-full p-5 pt-14 flex flex-col items-center justify-center text-center">
+          <h2 class="font-handwriting text-4xl font-bold text-sky-900 mb-2">Its your dayy!!! 🎉</h2>
+          
+          <!-- Calendar Card -->
+          <div class="bg-white/95 backdrop-blur border-2 border-sky-200 rounded-2xl p-4 w-full shadow-sm my-2">
+            <div class="text-xs font-bold tracking-widest text-sky-800 uppercase mb-2 font-doodle">JANUARY</div>
+            <div class="grid grid-cols-7 gap-1 text-center text-xs font-semibold">
+              <span class="text-sky-400">S</span><span class="text-sky-400">M</span>
+              <span class="text-sky-400">T</span><span class="text-sky-400">W</span>
+              <span class="text-sky-400">T</span><span class="text-sky-400">F</span>
+              <span class="text-sky-400">S</span>
+              
+              <span class="text-slate-300"></span><span class="text-slate-300"></span>
+              <span class="py-1">1</span><span class="py-1">2</span><span class="py-1">3</span>
+              <span class="py-1 bg-rose-400 text-white font-bold rounded-full relative shadow scale-110">4<span class="absolute -top-1 -right-1 text-[8px]">❤️</span></span>
+              <span class="py-1">5</span><span class="py-1">6</span><span class="py-1">7</span>
+              <span class="py-1">8</span><span class="py-1">9</span><span class="py-1">10</span><span class="py-1">11</span>
+              <span class="py-1">12</span><span class="py-1">13</span><span class="py-1">14</span><span class="py-1">15</span>
+              <span class="py-1">16</span><span class="py-1">17</span><span class="py-1">18</span><span class="py-1">19</span>
+              <span class="py-1">20</span><span class="py-1">21</span><span class="py-1">22</span><span class="py-1">23</span>
+              <span class="py-1">24</span><span class="py-1">25</span><span class="py-1">26</span><span class="py-1">27</span>
+              <span class="py-1">28</span><span class="py-1">29</span><span class="py-1">30</span><span class="py-1">31</span>
+            </div>
+          </div>
+
+          <div class="polaroid rotate-3 w-52 mt-2">
+            <div class="w-full h-32 bg-rose-50 rounded flex items-center justify-center text-rose-400">
+              <svg class="w-12 h-12" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 3: Wish For You -->
+        <div class="min-w-full h-full p-5 pt-14 flex flex-col items-center justify-center text-center">
+          <h2 class="font-handwriting text-4xl font-bold text-sky-900 mb-2">Wish For You!! ✨</h2>
+          
+          <div class="polaroid -rotate-2 w-52 mb-3">
+            <div class="washi-tape"></div>
+            <div class="w-full h-32 bg-amber-50 rounded flex flex-col items-center justify-center p-2 text-amber-600">
+              <span class="text-3xl mb-1">💐</span>
+              <span class="font-handwriting text-lg font-bold">I'm so proud of you!</span>
+            </div>
+          </div>
+
+          <div class="bg-white/95 backdrop-blur border border-sky-200 rounded-2xl p-3.5 text-left text-xs text-slate-700 leading-relaxed shadow-sm w-full font-medium">
+            <p class="mb-1.5">To be honest, aku ga tau harus mulai cerpen panjang ini darimana sayang hiii!! 🥺</p>
+            <p>I wanna hold ur face baby, aku mau ucapin selamat hari lahir dan selamat bertumbuh jauh lebih baik sayangku kecintaanku, panjang umur, a wish for u on ur birthday, whatever u seek may u find, whatever u wish may it be fulfilled on ur birthday and together ❤️</p>
+          </div>
+        </div>
+
+        <!-- SLIDE 4: Sayangkuu (Cat + Grid aesthetic) -->
+        <div class="min-w-full h-full p-5 pt-14 flex flex-col items-center justify-center text-center">
+          <h2 class="font-handwriting text-4xl font-bold text-sky-900 mb-2">sayangkuu 💕</h2>
+
+          <div class="bg-grid-paper border border-sky-300 rounded-2xl p-3.5 text-left text-[11px] text-slate-700 leading-relaxed shadow-sm w-full mb-3 relative">
+            <span class="absolute -top-3 right-3 bg-sky-200 text-sky-800 px-2 py-0.5 rounded-full text-[9px] font-bold">Note ✏️</span>
+            aku sangat berharap dan berdoa untuk kamu, mudah mudahan kamu terus diberi kesehatan, berkelimpahan, dikelilingi orang yang baik dan bermanfaat, diberi kemudahan ditengah rasa sakitmu, rasa sedihmu, rasa sulitmu. Dan aku selalu berdoa mudah mudahan hatimu diberi kelapangan dan kesabaran atas hal apapun. LOVE YOU!! ❤️
+          </div>
+
+          <!-- Cute Cat Illustration Box -->
+          <div class="flex gap-2 w-full justify-center">
+            <div class="polaroid -rotate-3 w-1/2 flex flex-col items-center">
+              <span class="text-3xl my-2">🐱🌸</span>
+              <span class="font-handwriting text-sm text-slate-700">For u!</span>
+            </div>
+            <div class="polaroid rotate-3 w-1/2 flex flex-col items-center">
+              <span class="text-3xl my-2">🐱💐</span>
+              <span class="font-handwriting text-sm text-slate-700">Special Cat</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 5: Aku Sayang Kamu -->
+        <div class="min-w-full h-full p-5 pt-14 flex flex-col items-center justify-center text-center">
+          <h2 class="font-handwriting text-3xl font-bold text-sky-900 mb-3">akuu sayang kamuu :3</h2>
+
+          <div class="space-y-2.5 w-full text-left">
+            <div class="bg-sky-100/90 p-3 rounded-2xl border border-sky-300 shadow-sm">
+              <p class="text-[11px] text-sky-900 leading-snug">
+                <b>miss u badly valencio:</b> I hope you have an awesome day, live in the moment babe, i'm so proud of you 💗
+              </p>
+            </div>
+            <div class="bg-sky-100/90 p-3 rounded-2xl border border-sky-300 shadow-sm">
+              <p class="text-[11px] text-sky-900 leading-snug">
+                <b>you've done so good:</b> You've made it so far, im just in awe of how far you've come, i'll always be here babe. You've saved me over and over!
+              </p>
+            </div>
+            <div class="bg-sky-100/90 p-3 rounded-2xl border border-sky-300 shadow-sm">
+              <p class="text-[11px] text-sky-900 leading-snug">
+                <b>i love you, all of you:</b> Your mind, your body, your lips, your smile, your heart. You make my day so much better! 💕
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 6: Last Pesan -->
+        <div class="min-w-full h-full p-5 pt-14 flex flex-col items-center justify-center text-center">
+          <h2 class="font-handwriting text-3xl font-bold text-sky-900 mb-2">last pesan dari akuu!!!</h2>
+
+          <!-- Flower Bouquet Graphic -->
+          <div class="w-24 h-24 my-1 flex justify-center items-center bg-white/80 rounded-full p-2 border border-sky-200 shadow-sm">
+            <svg viewBox="0 0 100 100" class="w-full h-full">
+              <circle cx="50" cy="35" r="14" fill="#f43f5e" opacity="0.85"/>
+              <circle cx="36" cy="45" r="11" fill="#fb7185" opacity="0.85"/>
+              <circle cx="64" cy="45" r="11" fill="#fda4af" opacity="0.85"/>
+              <path d="M50 50 L50 85 M50 60 L32 75 M50 65 L68 75" stroke="#166534" stroke-width="4" stroke-linecap="round"/>
+              <polygon points="40,80 60,80 50,95" fill="#fde047" />
+            </svg>
+          </div>
+
+          <div class="bg-white/90 p-3 rounded-2xl border border-sky-200 text-left text-[11px] text-slate-700 leading-relaxed shadow-sm w-full mb-2">
+            Sometimes, yang bisa diandelin hanya kamu sendiri, tapi jangan pernah kamu ngerasa sendirian if you need someone to talk to, im here, and always.
+          </div>
+
+          <div class="bg-white/90 p-3 rounded-2xl border border-sky-200 text-left text-[11px] text-slate-700 leading-relaxed shadow-sm w-full">
+            aku akan selalu bangga atas setiap proses yang semoga jalanmu selalu dipermudah. Teruslah tumbuh, teruslah melangkah & bahagia yaa!
+          </div>
+        </div>
+
+        <!-- SLIDE 7: Final Slide & Celebration -->
+        <div class="min-w-full h-full p-5 pt-14 flex flex-col items-center justify-center text-center">
+          <h1 class="font-handwriting text-4xl font-bold text-sky-900 mb-3 leading-snug">
+            Sekali lagi Happy Birthday ya Sayang ❤️
+          </h1>
+
+          <div class="polaroid -rotate-1 w-60 mb-5">
+            <div class="washi-tape"></div>
+            <div class="w-full h-36 bg-sky-100 rounded flex flex-col items-center justify-center text-sky-600 p-2">
+              <span class="text-4xl mb-1">🎂</span>
+              <span class="font-doodle text-xs font-bold">Best Wishes For You</span>
+            </div>
+            <p class="font-handwriting text-2xl text-slate-800 mt-2 font-bold">Love You Always!</p>
+          </div>
+
+          <button id="confettiBtn" class="bg-gradient-to-r from-sky-500 to-blue-600 text-white font-bold text-xs px-6 py-3 rounded-full shadow-lg hover:scale-105 active:scale-95 transition transform flex items-center gap-2">
+            <span>🎉 Klik Kejutan Kembang Api 🎉</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Navigation Footer -->
+    <div class="absolute bottom-3 left-0 right-0 px-5 flex justify-between items-center z-40">
+      <button id="prevBtn" class="w-8 h-8 bg-white/90 border border-sky-300 rounded-full flex justify-center items-center text-sky-900 font-bold shadow hover:bg-sky-50 disabled:opacity-30">
+        ❮
+      </button>
+
+      <!-- Dots Indicators -->
+      <div id="dotsContainer" class="flex gap-1.5"></div>
+
+      <button id="nextBtn" class="w-8 h-8 bg-white/90 border border-sky-300 rounded-full flex justify-center items-center text-sky-900 font-bold shadow hover:bg-sky-50 disabled:opacity-30">
+        ❯
+      </button>
+    </div>
+
+  </div>
+
+  <script>
+    const wrapper = document.getElementById('slidesWrapper');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const dotsContainer = document.getElementById('dotsContainer');
+    const startOverlay = document.getElementById('startOverlay');
+    const mainContainer = document.getElementById('mainContainer');
+
+    const totalSlides = 7;
+    let currentIndex = 0;
+
+    // Build Dots Indicators
+    for (let i = 0; i < totalSlides; i++) {
+      const dot = document.createElement('div');
+      dot.className = `h-2 rounded-full transition-all duration-300 ${i === 0 ? 'w-5 bg-sky-600' : 'w-2 bg-sky-300'}`;
+      dotsContainer.appendChild(dot);
+    }
+    const dots = dotsContainer.children;
+
+    function updateSlider() {
+      wrapper.style.transform = `translateX(-${currentIndex * 100}%)`;
+      for (let i = 0; i < dots.length; i++) {
+        dots[i].className = i === currentIndex 
+          ? 'h-2 w-5 bg-sky-600 rounded-full transition-all duration-300' 
+          : 'h-2 w-2 bg-sky-300 rounded-full transition-all duration-300';
+      }
+      prevBtn.disabled = currentIndex === 0;
+      nextBtn.disabled = currentIndex === totalSlides - 1;
+    }
+
+    prevBtn.addEventListener('click', () => { if (currentIndex > 0) { currentIndex--; updateSlider(); } });
+    nextBtn.addEventListener('click', () => { if (currentIndex < totalSlides - 1) { currentIndex++; updateSlider(); } });
+
+    // Touch Swipe Gesture
+    let startX = 0;
+    wrapper.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, { passive: true });
+    wrapper.addEventListener('touchend', (e) => {
+      let diffX = startX - e.changedTouches[0].clientX;
+      if (diffX > 40 && currentIndex < totalSlides - 1) currentIndex++;
+      else if (diffX < -40 && currentIndex > 0) currentIndex--;
+      updateSlider();
+    }, { passive: true });
+
+    // Web Audio Synthesizer (Happy Birthday Melody)
+    const musicToggle = document.getElementById('musicToggle');
+    const musicIcon = document.getElementById('musicIcon');
+    const musicText = document.getElementById('musicText');
+
+    let audioCtx = null;
+    let isSynthPlaying = false;
+    let synthTimer = null;
+
+    const notes = [
+      { f: 261.63, d: 0.35 }, { f: 261.63, d: 0.15 }, { f: 293.66, d: 0.5 }, { f: 261.63, d: 0.5 }, { f: 349.23, d: 0.5 }, { f: 329.63, d: 1.0 },
+      { f: 261.63, d: 0.35 }, { f: 261.63, d: 0.15 }, { f: 293.66, d: 0.5 }, { f: 261.63, d: 0.5 }, { f: 392.00, d: 0.5 }, { f: 349.23, d: 1.0 },
+      { f: 261.63, d: 0.35 }, { f: 261.63, d: 0.15 }, { f: 523.25, d: 0.5 }, { f: 440.00, d: 0.5 }, { f: 349.23, d: 0.5 }, { f: 329.63, d: 0.5 }, { f: 293.66, d: 0.5 },
+      { f: 466.16, d: 0.35 }, { f: 466.16, d: 0.15 }, { f: 440.00, d: 0.5 }, { f: 349.23, d: 0.5 }, { f: 392.00, d: 0.5 }, { f: 349.23, d: 1.2 }
+    ];
+
+    function playNote(freq, duration) {
+      if (!audioCtx) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + duration);
+    }
+
+    function startSynth() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      
+      isSynthPlaying = true;
+      musicIcon.textContent = "⏸️";
+      musicIcon.classList.add('animate-spin-slow');
+      musicText.textContent = "Lagu";
+
+      let noteIdx = 0;
+      function loop() {
+        if (!isSynthPlaying) return;
+        const current = notes[noteIdx];
+        playNote(current.f, current.d);
+        noteIdx = (noteIdx + 1) % notes.length;
+        synthTimer = setTimeout(loop, current.d * 900);
+      }
+      loop();
+    }
+
+    function stopSynth() {
+      isSynthPlaying = false;
+      clearTimeout(synthTimer);
+      musicIcon.textContent = "▶️";
+      musicIcon.classList.remove('animate-spin-slow');
+      musicText.textContent = "Lagu";
+    }
+
+    // Auto-play trigger upon user entry
+    function enableAutoPlay() {
+      startOverlay.classList.add('opacity-0');
+      setTimeout(() => { startOverlay.style.display = 'none'; }, 500);
+      if (!isSynthPlaying) {
+        startSynth();
+      }
+    }
+
+    startOverlay.addEventListener('click', enableAutoPlay);
+    mainContainer.addEventListener('touchstart', enableAutoPlay, { once: true });
+
+    musicToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (isSynthPlaying) {
+        stopSynth();
+      } else {
+        startSynth();
+      }
+    });
+
+    document.getElementById('confettiBtn').addEventListener('click', () => {
+      confetti({ particleCount: 130, spread: 85, origin: { y: 0.6 } });
+    });
+
+    updateSlider();
+  </script>
+</body>
+</html>/html>
